@@ -4,6 +4,10 @@ import HomePage from './pages/HomePage'
 import LoginPage from './pages/LoginPage'
 import SignupPage from './pages/SignupPage'
 import CompanyLoginPage from './pages/CompanyLoginPage'
+import CompanyRegisterDriver from './pages/CompanyRegisterDriver'
+import PassengerLanding from './pages/PassengerLanding'
+import PassengerBookings from './pages/PassengerBookings'
+import CompanyPeople from './pages/CompanyPeople'
 import AdminDashboard from './pages/AdminDashboard'
 import TeamLeaderDashboard from './pages/TeamLeaderDashboard'
 import ManagerDashboard from './pages/ManagerDashboard'
@@ -12,6 +16,8 @@ import UserDashboard from './pages/UserDashboard'
 import CorporateDashboard from './pages/CorporateDashboard'
 import ProtectedRoute from './components/ProtectedRoute'
 import GlassDashboard from './components/GlassDashboard'
+import BookCab from './pages/BookCab'
+import BookHotel from './pages/BookHotel'
 
 function App() {
   return (
@@ -22,7 +28,11 @@ function App() {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignupPage />} />
           <Route path="/company-login" element={<CompanyLoginPage />} />
+          <Route path="/company/register-driver" element={<CompanyRegisterDriver />} />
           <Route path="/glass-demo" element={<GlassDashboard />} />
+          <Route path="/passenger" element={<PassengerLanding />} />
+          <Route path="/passenger/bookings" element={<PassengerBookings />} />
+          <Route path="/company/people" element={<CompanyPeople />} />
           
           {/* Protected routes */}
           <Route path="/admin" element={
@@ -58,6 +68,18 @@ function App() {
           <Route path="/corporate" element={
             <ProtectedRoute allowedRoles={['corporate']}>
               <CorporateDashboard />
+            </ProtectedRoute>
+          } />
+
+          <Route path="/dashboard/book-cab" element={
+            <ProtectedRoute allowedRoles={['user']}>
+              <BookCab />
+            </ProtectedRoute>
+          } />
+
+          <Route path="/dashboard/book-hotel" element={
+            <ProtectedRoute allowedRoles={['user']}>
+              <BookHotel />
             </ProtectedRoute>
           } />
           

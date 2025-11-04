@@ -9,6 +9,8 @@ interface DashboardStats {
   pendingApprovals: number
 }
 
+import AppleLayout from '../components/AppleLayout'
+
 export default function AdminDashboard() {
   const { user, logout } = useAuth()
   const [stats, setStats] = useState<DashboardStats>({
@@ -17,13 +19,36 @@ export default function AdminDashboard() {
     totalRevenue: 0,
     pendingApprovals: 0,
   })
+  const [pendingRegs, setPendingRegs] = useState<any[]>([])
 
   useEffect(() => {
     // Fetch dashboard stats
     apiClient.get('/admin/stats')
       .then(response => setStats(response.data))
       .catch(error => console.error('Failed to fetch stats:', error))
+    // Fetch pending registrations for approval
+    apiClient.get('/admin/pending-registrations')
+      .then(res => setPendingRegs(res.data || []))
+      .catch(() => setPendingRegs([]))
   }, [])
+
+  const approveUser = async (id: string) => {
+    try {
+      await apiClient.post(`/admin/approve-user/${id}`, { approve: true })
+      setPendingRegs(prev => prev.filter(r => r.id !== id))
+    } catch (err) {
+      console.error('Approve failed', err)
+    }
+  }
+
+  const rejectUser = async (id: string) => {
+    try {
+      await apiClient.post(`/admin/approve-user/${id}`, { approve: false })
+      setPendingRegs(prev => prev.filter(r => r.id !== id))
+    } catch (err) {
+      console.error('Reject failed', err)
+    }
+  }
 
   const features = [
     {
@@ -66,28 +91,10 @@ export default function AdminDashboard() {
   ]
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <AppleLayout>
+      <div className="max-w-6xl mx-auto">
       {/* Header */}
-      <header className="bg-white shadow">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16">
-            <div className="flex items-center">
-              <h1 className="text-xl font-semibold text-gray-900">Admin Dashboard</h1>
-            </div>
-            <div className="flex items-center space-x-4">
-              <span className="text-sm text-gray-500">Welcome, {user?.name}</span>
-              <button
-                onClick={logout}
-                className="text-sm text-gray-500 hover:text-gray-700"
-              >
-                Logout
-              </button>
-            </div>
-          </div>
-        </div>
-      </header>
-
-      <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+      <main className="py-6 sm:px-6 lg:px-8">
         {/* Stats Overview */}
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4 mb-8">
           <div className="bg-white overflow-hidden shadow rounded-lg">
@@ -163,8 +170,8 @@ export default function AdminDashboard() {
           </div>
         </div>
 
-        {/* Feature Grid */}
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+  {/* Feature Grid */}
+  <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {features.map((feature, index) => (
             <div key={index} className="bg-white overflow-hidden shadow rounded-lg">
               <div className="p-6">
@@ -193,7 +200,31 @@ export default function AdminDashboard() {
             </div>
           ))}
         </div>
+
+        {/* Pending registrations */}
+        <div className="mt-8">
+          <h2 className="text-lg font-semibold mb-4">Pending Registrations</h2>
+          {pendingRegs.length === 0 ? (
+            <div className="text-sm text-gray-500">No pending registrations.</div>
+          ) : (
+            <div className="grid gap-3">
+              {pendingRegs.map(reg => (
+                <div key={reg.id} className="border rounded p-4 flex justify-between items-center">
+                  <div>
+                    <div className="font-medium">{reg.name}</div>
+                    <div className="text-sm text-gray-500">{reg.email} • {reg.role || 'driver'}</div>
+                  </div>
+                  <div className="flex gap-2">
+                    <button onClick={() => approveUser(reg.id)} className="px-3 py-1 bg-green-600 text-white rounded">Approve</button>
+                    <button onClick={() => rejectUser(reg.id)} className="px-3 py-1 text-red-600 border rounded">Reject</button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
       </main>
     </div>
+    </AppleLayout>
   )
 }

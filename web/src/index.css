@@ -65,3 +65,80 @@ body {
   padding: 2rem;
   text-align: center;
 }
+
+/* Global site background: soft multi-layer gradient with subtle radial highlights */
+html, body, #root {
+  height: 100%;
+}
+
+body {
+  background-color: #0b1020;
+  background-image: radial-gradient(600px 400px at 10% 10%, rgba(99,102,241,0.08), transparent 20%),
+                    radial-gradient(500px 300px at 90% 80%, rgba(236,72,153,0.06), transparent 18%),
+                    linear-gradient(180deg, rgba(10,14,26,1) 0%, rgba(7,10,18,1) 100%);
+  background-attachment: fixed;
+  color: #e6eef8;
+}
+
+/* Buttons and rows implemented with regular CSS to avoid @apply issues
+   These provide a consistent look across the site without relying on PostCSS @apply. */
+.btn {
+  padding: 0.625rem 1.5rem; /* px-6 py-3 */
+  border-radius: 0.75rem; /* rounded-lg */
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6px 18px rgba(2,6,23,0.5);
+  gap: 0.5rem;
+  transition: transform 180ms ease, box-shadow 180ms ease;
+}
+
+.btn:hover { transform: translateY(-3px); box-shadow: 0 10px 30px rgba(2,6,23,0.6); }
+
+.btn-primary {
+  background-image: linear-gradient(90deg, #6366f1 0%, #7c3aed 50%, #ec4899 100%);
+  color: white;
+  border: none;
+}
+
+.btn-secondary {
+  background: rgba(255,255,255,0.06);
+  color: white;
+  border: 1px solid rgba(255,255,255,0.08);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: white;
+  text-decoration: none;
+}
+
+.btn-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Make content containers slightly translucent to fit the Apple-like aesthetic */
+.panel-translucent {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.04);
+  backdrop-filter: blur(6px);
+}
+
+/* Hero styles */
+.hero-outer { padding-top: 2rem; padding-bottom: 2rem; }
+.hero-card { display: block; }
+.hero-card h2 { color: #ffffff; }
+
+/* Small helpers */
+.text-white\/85 { color: rgba(230,238,248,0.85); }
+.text-white\/80 { color: rgba(230,238,248,0.8); }
+.text-white\/60 { color: rgba(230,238,248,0.6); }
+
+/* Tiny scrollbar styling for partners strip */
+.overflow-x-auto::-webkit-scrollbar { height: 8px; }
+.overflow-x-auto::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.06); border-radius: 999px; }
