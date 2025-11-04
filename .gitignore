@@ -94,3 +94,10 @@ coverage/
 
 # JetBrains
 .idea/
+ 
+# Virtualenvs
+backend/.venv/
+
+# Frontend build / deps
+web/node_modules/
+web/dist/
